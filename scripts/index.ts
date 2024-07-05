@@ -2,7 +2,7 @@ import { hideBin } from "yargs/helpers";
 import Yargs from "yargs/yargs";
 import { stressOptions } from "./stress";
 import { redisReadCommand, redisInitCommand } from "./redis";
-import { writeConfigCommand, writeGethGenesisCommand, writePrysmCommand, writeL2ChainConfigCommand, writeL3ChainConfigCommand } from "./config";
+import { writeConfigCommand, writeGethGenesisCommand, writeLodestarCommand, writeL2ChainConfigCommand, writeL3ChainConfigCommand } from "./config";
 import {
   printAddressCommand,
   namedAccountHelpString,
@@ -45,7 +45,7 @@ async function main() {
     .command(writeGethGenesisCommand)
     .command(writeL2ChainConfigCommand)
     .command(writeL3ChainConfigCommand)
-    .command(writePrysmCommand)
+    .command(writeLodestarCommand)
     .command(writeAccountsCommand)
     .command(printAddressCommand)
     .command(printPrivateKeyCommand)

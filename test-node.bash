@@ -43,7 +43,7 @@ detach=false
 blockscout=false
 tokenbridge=false
 l3node=false
-consensusclient=false
+consensusclient=true
 redundantsequencers=0
 dev_build_nitro=false
 dev_build_blockscout=false
@@ -180,7 +180,7 @@ while [[ $# -gt 0 ]]; do
             echo --build           rebuild docker images
             echo --dev             build nitro and blockscout dockers from source instead of pulling them. Disables simple mode
             echo --init            remove all data, rebuild, deploy new rollup
-            echo --pos             l1 is a proof-of-stake chain \(using prysm for consensus\)
+            echo --pos             l1 is a proof-of-stake chain \(using lodestar for consensus\)
             echo --validate        heavy computation, validating all blocks in WASM
             echo --l3node          deploys an L3 node on top of the L2
             echo --l3-fee-token    L3 chain is set up to use custom fee token. Only valid if also '--l3node' is provided
@@ -327,7 +327,7 @@ if $force_init; then
       docker compose run scripts write-geth-genesis-config
 
       echo == Writing configs
-      docker compose run scripts write-prysm-config
+      docker compose run scripts write-lodestar-config
 
       echo == Initializing go-ethereum genesis configuration
       docker compose run geth init --datadir /datadir/ /config/geth_genesis.json
@@ -335,12 +335,12 @@ if $force_init; then
       echo == Starting geth
       docker compose up --wait geth
 
-      echo == Creating prysm genesis
-      docker compose up create_beacon_chain_genesis
+      # echo == Creating lodestar genesis
+      # docker compose up create_beacon_chain_genesis
 
-      echo == Running prysm
-      docker compose up --wait prysm_beacon_chain
-      docker compose up --wait prysm_validator
+      echo == Running lodestar
+      docker compose up --wait lodestar_beacon_chain
+      # docker compose up --wait lodestar_validator
     else
       docker compose up --wait geth
     fi

@@ -4,10 +4,10 @@ import { namedAccount, namedAddress } from './accounts'
 
 const path = require("path");
 
-function writePrysmConfig(argv: any) {
-    const prysm = `
-CONFIG_NAME: interop
-PRESET_BASE: interop
+function writeLodestarConfig(argv: any) {
+    const lodestar = `
+CONFIG_NAME: minimal
+PRESET_BASE: minimal
 
 # Genesis
 GENESIS_FORK_VERSION: 0x20000089
@@ -28,42 +28,43 @@ SLOTS_PER_EPOCH: 6
 # Deposit contract
 DEPOSIT_CONTRACT_ADDRESS: 0x4242424242424242424242424242424242424242
     `
-    fs.writeFileSync(path.join(consts.configpath, "prysm.yaml"), prysm)
+    fs.writeFileSync(path.join(consts.configpath, "lodestar.yaml"), lodestar)
 }
 
 function writeGethGenesisConfig(argv: any) {
+                // "consensus": "clique",
+
     const gethConfig = `
     {
         "config": {
             "ChainName": "l1_chain",
-                "chainId": 32382,
-                "consensus": "clique",
-                "homesteadBlock": 0,
-                "daoForkSupport": true,
-                "eip150Block": 0,
-                "eip150Hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
-                "eip155Block": 0,
-                "eip158Block": 0,
-                "byzantiumBlock": 0,
-                "constantinopleBlock": 0,
-                "petersburgBlock": 0,
-                "istanbulBlock": 0,
-                "muirGlacierBlock": 0,
-                "berlinBlock": 0,
-                "londonBlock": 0,
-                "terminalBlockHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
-                "arrowGlacierBlock": 0,
-                "grayGlacierBlock": 0,
-                "clique": {
+            "chainId": 32382,
+            "homesteadBlock": 0,
+            "daoForkSupport": true,
+            "eip150Block": 0,
+            "eip150Hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+            "eip155Block": 0,
+            "eip158Block": 0,
+            "byzantiumBlock": 0,
+            "constantinopleBlock": 0,
+            "petersburgBlock": 0,
+            "istanbulBlock": 0,
+            "muirGlacierBlock": 0,
+            "berlinBlock": 0,
+            "londonBlock": 0,
+            "terminalBlockHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+            "arrowGlacierBlock": 0,
+            "grayGlacierBlock": 0,
+            "clique": {
                 "period": 5,
-                    "epoch": 30000
+                "epoch": 30000
             },
             "terminalTotalDifficulty": 50
         },
         "difficulty": "1",
         "extradata": "0x00000000000000000000000000000000000000000000000000000000000000003f1Eae7D46d88F08fc2F8ed27FCb2AB183EB2d0E0B0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
         "nonce": "0x42",
-        "timestamp": "0x0",
+        "timestamp": "0x6464e8bf",
         "gasLimit": "0x1C9C380",
         "mixHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
         "alloc": {
@@ -401,11 +402,11 @@ export const writeConfigCommand = {
     }
 }
 
-export const writePrysmCommand = {
-    command: "write-prysm-config",
-    describe: "writes prysm config files",
+export const writeLodestarCommand = {
+    command: "write-lodestar-config",
+    describe: "writes lodestar config files",
     handler: (argv: any) => {
-        writePrysmConfig(argv)
+        writeLodestarConfig(argv)
     }
 }
 
