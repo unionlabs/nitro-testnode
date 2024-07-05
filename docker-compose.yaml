@@ -47,7 +47,7 @@ services:
       - "127.0.0.1:6379:6379"
 
   geth:
-    image: ethereum/client-go:v1.10.23
+    image: ethereum/client-go:v1.13.12
     ports:
       - "127.0.0.1:8545:8545"
       - "127.0.0.1:8551:8551"
@@ -78,7 +78,11 @@ services:
       - --nodiscover
       - --syncmode=full
       - --gcmode=archive
-      - --nat=none
+      # - --dev
+      # - --dev.period=1
+      # - --mine
+      # - --miner.etherbase=0x3f1Eae7D46d88F08fc2F8ed27FCb2AB183EB2d0E
+      # - --nat=none
     # healthcheck:
     #   interval: "5s"
     #   retries: 3
@@ -133,16 +137,42 @@ services:
   # The account used in go-ethereum is set as the suggested fee recipient for transactions
   # proposed via the validators attached to the beacon node.
   lodestar_beacon_chain:
-    image: "chainsafe/lodestar:latest"
+    image: "chainsafe/lodestar:v1.15.1"
     command:
-      - dev
-      # - --genesisTime="$(date +%s)"
+      # - /bin/bash
+      # - -c
       # - |
-      #   --genesisEth1Hash="$(curl "http://geth:8545" -X POST -H 'Content-Type: application/json' -d '{"jsonrpc": "2.0", "id": "1", "method": "eth_getBlockByNumber","params": ["0x0", false]}' | jq -r '.result.hash')"
-      - --genesisValidators=128
-      - --startValidators=0..127
+      #   ETH_ENDPOINT=http://geth:8545
+      #   EXECUTION_ENDPOINT=http://geth:8551
+      #   ETH_GENESIS_HASH=$$(curl "$$ETH_ENDPOINT" -X POST -H 'Content-Type: application/json' -d '{"jsonrpc": "2.0", "id": "1", "method": "eth_getBlockByNumber","params": ["0x0", false]}' | jq -r '.result.hash')
+      #   GENESIS_TIMESTAMP=$$(date +%s)
+      #   node ./packages/cli/bin/lodestar dev \
+      #     --genesisTime="$$GENESIS_TIMESTAMP" \
+      #     --genesisEth1Hash="$ETH_GENESIS_HASH" \
+      #     --genesisValidators=128 \
+      #     --startValidators="0..127" \
+      #     --rest.address="0.0.0.0" \
+      #     --rest.cors="*" \
+      #     --eth1.providerUrls="$$ETH_ENDPOINT" \
+      #     --execution.urls="$$EXECUTION_ENDPOINT" \
+      #     --reset \
+      #     --terminal-total-difficulty-override=0 \
+      #     --params.ALTAIR_FORK_EPOCH=0 \
+      #     --params.BELLATRIX_FORK_EPOCH=0 \
+      #     --params.CAPELLA_FORK_EPOCH=0 \
+      #     --params.DENEB_FORK_EPOCH=0 \
+      #     --eth1=true \
+      #     --jwt-secret=${config}/dev-jwt.prv \
+      #     --rest.namespace="*"
+      - dev
+      - --genesisEth1Hash=0x0ebf74b58172df4d06235c51f6fee25682d0b36a50e54f7a8b09f3d22f275c80
+      # - --genesisTime="$(date +%s)"
+      # - --genesisEth1Hash="$(curl "http://geth:8545" -X POST -H 'Content-Type: application/json' -d '{"jsonrpc": "2.0", "id": "1", "method": "eth_getBlockByNumber","params": ["0x0", false]}' | jq -r '.result.hash')"
+      - --genesisValidators=64
+      - --startValidators=0..63
       - --rest.address="0.0.0.0"
       - --rest.cors=*
+      - --eth1=true
       - --eth1.providerUrls="http://geth:8545"
       - --execution.urls="http://geth:8551"
       - --reset
@@ -151,7 +181,6 @@ services:
       - --params.BELLATRIX_FORK_EPOCH=0
       - --params.CAPELLA_FORK_EPOCH=0
       - --params.DENEB_FORK_EPOCH=0
-      - --eth1=true
       - --jwt-secret=/config/jwt.hex
       - --rest.namespace=*
     depends_on:

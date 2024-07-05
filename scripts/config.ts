@@ -28,7 +28,7 @@ SLOTS_PER_EPOCH: 6
 # Deposit contract
 DEPOSIT_CONTRACT_ADDRESS: 0x4242424242424242424242424242424242424242
     `
-    fs.writeFileSync(path.join(consts.configpath, "lodestar.yaml"), lodestar)
+    // fs.writeFileSync(path.join(consts.configpath, "lodestar.yaml"), lodestar)
 }
 
 function writeGethGenesisConfig(argv: any) {
@@ -52,14 +52,16 @@ function writeGethGenesisConfig(argv: any) {
             "muirGlacierBlock": 0,
             "berlinBlock": 0,
             "londonBlock": 0,
-            "terminalBlockHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
             "arrowGlacierBlock": 0,
-            "grayGlacierBlock": 0,
+"grayGlacierBlock": 0,
+
+"shanghaiTime": 1684334927,
+    "cancunTime": 1684334928,
             "clique": {
-                "period": 5,
+                "period": 1,
                 "epoch": 30000
             },
-            "terminalTotalDifficulty": 50
+            "terminalTotalDifficulty": 0
         },
         "difficulty": "1",
         "extradata": "0x00000000000000000000000000000000000000000000000000000000000000003f1Eae7D46d88F08fc2F8ed27FCb2AB183EB2d0E0B0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",

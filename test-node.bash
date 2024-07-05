@@ -345,6 +345,8 @@ if $force_init; then
       docker compose up --wait geth
     fi
 
+    sleep 10 # no idea why this sleep is needed but without it the tx fails
+
     echo == Funding validator, sequencer and l2owner
     docker compose run scripts send-l1 --ethamount 1000 --to validator --wait
     docker compose run scripts send-l1 --ethamount 1000 --to sequencer --wait
