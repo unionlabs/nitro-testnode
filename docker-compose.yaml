@@ -64,11 +64,11 @@ services:
       - --http
       - --http.api=eth,debug,net,web3,admin,engine,txpool
       - --http.addr=0.0.0.0
-      - --http.vhosts="*"
+      - --http.vhosts=*
       - --ws
       - --ws.api=eth,debug,net,web3,admin,engine,txpool
       - --ws.addr=0.0.0.0
-      - --authrpc.vhosts="*"
+      - --authrpc.vhosts=*
       - --authrpc.addr=0.0.0.0
       - --authrpc.jwtsecret=/config/jwt.hex
       - --datadir=/datadir
@@ -136,13 +136,13 @@ services:
     image: "chainsafe/lodestar:latest"
     command:
       - dev
-      - --genesisTime="$(date +%s)"
-      - |
-        --genesisEth1Hash="$(curl "http://geth:8545" -X POST -H 'Content-Type: application/json' -d '{"jsonrpc": "2.0", "id": "1", "method": "eth_getBlockByNumber","params": ["0x0", false]}' | jq -r '.result.hash')"
+      # - --genesisTime="$(date +%s)"
+      # - |
+      #   --genesisEth1Hash="$(curl "http://geth:8545" -X POST -H 'Content-Type: application/json' -d '{"jsonrpc": "2.0", "id": "1", "method": "eth_getBlockByNumber","params": ["0x0", false]}' | jq -r '.result.hash')"
       - --genesisValidators=128
       - --startValidators=0..127
       - --rest.address="0.0.0.0"
-      - --rest.cors="*"
+      - --rest.cors=*
       - --eth1.providerUrls="http://geth:8545"
       - --execution.urls="http://geth:8551"
       - --reset
@@ -153,7 +153,7 @@ services:
       - --params.DENEB_FORK_EPOCH=0
       - --eth1=true
       - --jwt-secret=/config/jwt.hex
-      - --rest.namespace="*"
+      - --rest.namespace=*
     depends_on:
       geth:
         condition: service_started
