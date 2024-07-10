@@ -375,10 +375,10 @@ if $force_init; then
 
     if $simple; then
         echo == Writing configs
-        docker compose run scripts write-config --simple
+        docker compose run scripts write-config --simple --l2chainid $l2chainid
     else
         echo == Writing configs
-        docker compose run scripts write-config
+        docker compose run scripts write-config --l2chainid $l2chainid
 
         echo == Initializing redis
         docker compose up --wait redis

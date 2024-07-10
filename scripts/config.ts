@@ -165,7 +165,7 @@ function writeConfigs(argv: any) {
             },
         },
         "chain": {
-            "id": 412346,
+            "id": argv.l2chainid,
             "info-files": [chainInfoFile],
         },
         "node": {
