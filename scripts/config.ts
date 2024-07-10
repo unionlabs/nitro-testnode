@@ -34,11 +34,13 @@ DEPOSIT_CONTRACT_ADDRESS: 0x4242424242424242424242424242424242424242
 function writeGethGenesisConfig(argv: any) {
                 // "consensus": "clique",
 
+    console.log("l1chainid:", argv.l1chainid);
+
     const gethConfig = `
     {
         "config": {
             "ChainName": "l1_chain",
-            "chainId": 32382,
+            "chainId": ${argv.l1chainid},
             "homesteadBlock": 0,
             "daoForkSupport": true,
             "eip150Block": 0,
@@ -325,7 +327,7 @@ function writeConfigs(argv: any) {
 
 function writeL2ChainConfig(argv: any) {
     const l2ChainConfig = {
-        "chainId": 412346,
+        "chainId": argv.l2chainid,
         "homesteadBlock": 0,
         "daoForkSupport": true,
         "eip150Block": 0,

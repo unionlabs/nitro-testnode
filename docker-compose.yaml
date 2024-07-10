@@ -396,7 +396,9 @@ services:
     entrypoint: /usr/local/bin/relay
     ports:
       - "127.0.0.1:9652:9652"
-    command: --chain.id 412346 --node.feed.input.url ws://sequencer:9642 --node.feed.output.port 9652
+    command: --chain.id "$L2_CHAIN_ID" --node.feed.input.url ws://sequencer:9642 --node.feed.output.port 9652
+    environment:
+      - L2_CHAIN_ID=${L2_CHAIN_ID}
 
   tokenbridge:
     depends_on:

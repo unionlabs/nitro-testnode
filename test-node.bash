@@ -52,7 +52,11 @@ l3_token_bridge=false
 batchposters=1
 devprivkey=b6b15c8cb491557369f3c7d2c287b053eb229daa9c22138887752191c9520659
 l1chainid=1337
+l2chainid=$(shuf -i 100000000-4294967296 -n 1)
 simple=true
+
+export L2_CHAIN_ID=$l2chainid
+
 while [[ $# -gt 0 ]]; do
     case $1 in
         --init)
@@ -131,7 +135,7 @@ while [[ $# -gt 0 ]]; do
             ;;
         --pos)
             consensusclient=true
-            l1chainid=32382
+            l1chainid=$(shuf -i 100000000-4294967296 -n 1)
             shift
             ;;
         --l3node)
@@ -324,7 +328,7 @@ if $force_init; then
 
     if $consensusclient; then
       echo == Writing configs
-      docker compose run scripts write-geth-genesis-config
+      docker compose run scripts write-geth-genesis-config --l1chainid $l1chainid
 
       echo == Writing configs
       docker compose run scripts write-lodestar-config
@@ -359,7 +363,7 @@ if $force_init; then
     l2ownerAddress=`docker compose run scripts print-address --account l2owner | tail -n 1 | tr -d '\r\n'`
 
     echo == Writing l2 chain config
-    docker compose run scripts --l2owner $l2ownerAddress  write-l2-chain-config
+    docker compose run scripts --l2chainid --l2owner $l2ownerAddress  write-l2-chain-config
 
     sequenceraddress=`docker compose run scripts print-address --account sequencer | tail -n 1 | tr -d '\r\n'`
     l2ownerKey=`docker compose run scripts print-private-key --account l2owner | tail -n 1 | tr -d '\r\n'`
@@ -432,7 +436,7 @@ if $force_init; then
         l3ownerkey=`docker compose run scripts print-private-key --account l3owner | tail -n 1 | tr -d '\r\n'`
         l3sequenceraddress=`docker compose run scripts print-address --account l3sequencer | tail -n 1 | tr -d '\r\n'`
 
-        docker compose run -e DEPLOYER_PRIVKEY=$l3ownerkey -e PARENT_CHAIN_RPC="http://sequencer:8547" -e PARENT_CHAIN_ID=412346 -e CHILD_CHAIN_NAME="orbit-dev-test" -e MAX_DATA_SIZE=104857 -e OWNER_ADDRESS=$l3owneraddress -e WASM_MODULE_ROOT=$wasmroot -e SEQUENCER_ADDRESS=$l3sequenceraddress -e AUTHORIZE_VALIDATORS=10 -e CHILD_CHAIN_CONFIG_PATH="/config/l3_chain_config.json" -e CHAIN_DEPLOYMENT_INFO="/config/l3deployment.json" -e CHILD_CHAIN_INFO="/config/deployed_l3_chain_info.json" $EXTRA_L3_DEPLOY_FLAG rollupcreator create-rollup-testnode
+        docker compose run -e DEPLOYER_PRIVKEY=$l3ownerkey -e PARENT_CHAIN_RPC="http://sequencer:8547" -e PARENT_CHAIN_ID=$l2chainid -e CHILD_CHAIN_NAME="orbit-dev-test" -e MAX_DATA_SIZE=104857 -e OWNER_ADDRESS=$l3owneraddress -e WASM_MODULE_ROOT=$wasmroot -e SEQUENCER_ADDRESS=$l3sequenceraddress -e AUTHORIZE_VALIDATORS=10 -e CHILD_CHAIN_CONFIG_PATH="/config/l3_chain_config.json" -e CHAIN_DEPLOYMENT_INFO="/config/l3deployment.json" -e CHILD_CHAIN_INFO="/config/deployed_l3_chain_info.json" $EXTRA_L3_DEPLOY_FLAG rollupcreator create-rollup-testnode
         docker compose run --entrypoint sh rollupcreator -c "jq [.[]] /config/deployed_l3_chain_info.json > /config/l3_chain_info.json"
 
         echo == Funding l3 funnel and dev key
@@ -478,6 +482,9 @@ if $run; then
     echo == Launching Sequencer
     echo if things go wrong - use --init to create a new chain
     echo
+
+    echo NODES: $NODES
+    echo UP_FLAG: $UP_FLAG
 
     docker compose up $UP_FLAG $NODES
 fi
