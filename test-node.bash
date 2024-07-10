@@ -52,7 +52,7 @@ l3_token_bridge=false
 batchposters=1
 devprivkey=b6b15c8cb491557369f3c7d2c287b053eb229daa9c22138887752191c9520659
 l1chainid=1337
-l2chainid=$(shuf -i 100000000-4294967296 -n 1)
+l2chainid=$(shuf -i 100000000-4294967295 -n 1)
 simple=true
 
 export L2_CHAIN_ID=$l2chainid
@@ -135,7 +135,7 @@ while [[ $# -gt 0 ]]; do
             ;;
         --pos)
             consensusclient=true
-            l1chainid=$(shuf -i 100000000-4294967296 -n 1)
+            l1chainid=$(shuf -i 100000000-4294967295 -n 1)
             shift
             ;;
         --l3node)
