@@ -57,6 +57,8 @@ simple=true
 
 export L2_CHAIN_ID=$l2chainid
 
+echo "L2_CHAIN_ID: $L2_CHAIN_ID"
+
 while [[ $# -gt 0 ]]; do
     case $1 in
         --init)
@@ -363,7 +365,7 @@ if $force_init; then
     l2ownerAddress=`docker compose run scripts print-address --account l2owner | tail -n 1 | tr -d '\r\n'`
 
     echo == Writing l2 chain config
-    docker compose run scripts --l2chainid --l2owner $l2ownerAddress  write-l2-chain-config
+    docker compose run scripts --l2chainid $l2chainid --l2owner $l2ownerAddress  write-l2-chain-config
 
     sequenceraddress=`docker compose run scripts print-address --account sequencer | tail -n 1 | tr -d '\r\n'`
     l2ownerKey=`docker compose run scripts print-private-key --account l2owner | tail -n 1 | tr -d '\r\n'`
